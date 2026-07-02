@@ -1,6 +1,14 @@
 // DNJ Exchange - API Client
 
-const BASE_URL = '/api';
+// Local dev: wrangler dev serves the Worker at localhost:8787
+// Production: Worker is deployed at the same origin under /api/* via a
+//   Cloudflare Pages custom domain + Worker route, OR at a dedicated
+//   workers.dev subdomain (set WORKER_URL below after deploying).
+const WORKER_URL = 'https://dnj-exchange.alexander-ubeda-herrera.workers.dev';
+
+const BASE_URL = (typeof location !== 'undefined' && location.hostname === 'localhost')
+  ? 'http://localhost:8787/api'
+  : `${WORKER_URL}/api`;
 
 /**
  * Helper genérico para peticiones HTTP

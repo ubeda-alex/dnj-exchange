@@ -1,0 +1,16 @@
+{
+  "name": "dnj-exchange-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker para DNJ Exchange",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create dnj-exchange",
+    "db:migrate": "wrangler d1 execute dnj-exchange --file=schema.sql",
+    "db:migrate:local": "wrangler d1 execute dnj-exchange --local --file=schema.sql",
+    "logs": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^3.99.0"
+  }
+}
