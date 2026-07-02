@@ -3,6 +3,9 @@ import { api } from '../api.js';
 import { getSession, setSession } from '../auth.js';
 import { navigate, showToast } from '../main.js';
 
+const SUPPORT_WHATSAPP_NUMBER = '50612345678'; // Reemplaza con tu número real
+const SUPPORT_WHATSAPP_MESSAGE = 'Hola, encontré un problema en DNJ Exchange y necesito ayuda.';
+
 let refreshInterval;
 let allRequests = [];
 let allSearching = [];
@@ -34,6 +37,9 @@ export async function renderDashboard(container) {
               <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
             </svg>
           </button>
+          <a href="" id="support-whatsapp-btn" class="btn btn-whatsapp contact-bug-btn" target="_blank" rel="noopener" title="Reportar un problema por WhatsApp">
+            💬 Reportar bug
+          </a>
         </div>
       </header>
       
@@ -92,6 +98,7 @@ export async function renderDashboard(container) {
   // Attach event listeners
   document.getElementById('new-request-fab').addEventListener('click', () => navigate('new-request'));
   document.getElementById('refresh-btn').addEventListener('click', () => loadRequests(session.uuid));
+  document.getElementById('support-whatsapp-btn').href = `https://wa.me/${SUPPORT_WHATSAPP_NUMBER}?text=${encodeURIComponent(SUPPORT_WHATSAPP_MESSAGE)}`;
   
   // Tabs logic
   document.querySelectorAll('.tab-btn').forEach(btn => {

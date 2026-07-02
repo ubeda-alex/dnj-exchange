@@ -4,7 +4,11 @@ import { getOrCreateUUID, setSession } from '../auth.js';
 import { navigate, showToast } from '../main.js';
 import { requestNotificationPermission, subscribeToPush } from '../push.js';
 
+const SUPPORT_WHATSAPP_NUMBER = '50612345678'; // Reemplaza con tu número real
+const SUPPORT_WHATSAPP_MESSAGE = 'Hola, encontré un problema en DNJ Exchange y necesito ayuda.';
+
 export async function renderOnboarding(container) {
+  const whatsappContactUrl = `https://wa.me/${SUPPORT_WHATSAPP_NUMBER}?text=${encodeURIComponent(SUPPORT_WHATSAPP_MESSAGE)}`;
   container.innerHTML = `
     <div class="page">
       <div class="onboarding-hero">
@@ -45,6 +49,11 @@ export async function renderOnboarding(container) {
             <button type="submit" class="btn btn-primary btn-full mt-4" id="save-btn">
               Comenzar intercambio →
             </button>
+            <div class="form-group" style="margin-top: 12px;">
+              <a href="${whatsappContactUrl}" target="_blank" rel="noopener" class="btn btn-whatsapp btn-full">
+                💬 Reportar un error por WhatsApp
+              </a>
+            </div>
           </form>
         </div>
       </div>
