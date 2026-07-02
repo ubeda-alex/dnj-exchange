@@ -1,0 +1,80 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    platform: linux/arm64
+    container_name: dnj-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-dnjexchange}
+      POSTGRES_USER: ${POSTGRES_USER:-dnj}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dnjsecret}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dnj} -d ${POSTGRES_DB:-dnjexchange}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dnj-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      platforms:
+        - linux/arm64
+    platform: linux/arm64
+    container_name: dnj-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dnj}:${POSTGRES_PASSWORD:-dnjsecret}@postgres:5432/${POSTGRES_DB:-dnjexchange}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_EMAIL: ${VAPID_EMAIL:-mailto:admin@dnjexchange.local}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - dnj-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      platforms:
+        - linux/arm64
+    platform: linux/arm64
+    container_name: dnj-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/public/index.html:/usr/share/nginx/html/index.html
+      - ./frontend/public/sw.js:/usr/share/nginx/html/sw.js
+      - ./frontend/public/manifest.json:/usr/share/nginx/html/manifest.json
+      - ./frontend/public/icons:/usr/share/nginx/html/icons
+      - ./frontend/src:/usr/share/nginx/html/src
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - dnj-net
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  dnj-net:
+    driver: bridge

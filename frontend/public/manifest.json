@@ -1,0 +1,17 @@
+{
+  "name": "DNJ Exchange",
+  "short_name": "DNJ",
+  "description": "Intercambio de zonas de entrada — Día Nacional de la Juventud, Hakuna Group Music",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
