@@ -114,7 +114,7 @@ async function init() {
   });
 
   const uuid = getOrCreateUUID();
-  
+
   try {
     const data = await api.getUser(uuid);
     // Usuario existe, actualizar sesión local por si acaso
@@ -129,6 +129,16 @@ async function init() {
       navigate('dashboard');
     }
   } catch (err) {
+    if (err.message && /403|Acceso restringido|Costa Rica/i.test(err.message)) {
+      app.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-title">Acceso restringido</div>
+          <div class="empty-state-desc">Esta plataforma solo está disponible para usuarios ubicados en Costa Rica.</div>
+        </div>
+      `;
+      return;
+    }
+
     // Usuario no existe en backend (404) o error de red
     console.log('Iniciando flujo de onboarding...', err.message);
     navigate('onboarding');

@@ -39,7 +39,13 @@ cloudflared tunnel --url http://localhost:80
 ```
 O configurando un tunnel persistente a través del dashboard de Cloudflare Zero Trust.
 
-## 📂 Arquitectura
+## � Seguridad de acceso
+
+La aplicación ahora restringe el acceso a usuarios ubicados en Costa Rica. El bloqueo se valida en el worker mediante el header `cf-ipcountry` y se puede ajustar con la variable de entorno `ALLOWED_COUNTRIES` (por defecto `CR`).
+
+Para desplegarlo, asegúrate de que el worker tenga esa variable configurada y que el dominio esté protegido.
+
+## �📂 Arquitectura
 
 - **Frontend:** PWA Vainilla JS con diseño Glassmorphism (Mobile First). Servida mediante Nginx en Alpine.
 - **Backend:** Node.js (Express) con cron jobs integrados para el matchmaking de intersección de conjuntos y Web Push VAPID notifications.

@@ -9,6 +9,7 @@
 import { handleUsers }    from './routes/users.js';
 import { handleRequests } from './routes/requests.js';
 import { runMatcher }     from './services/matcher.js';
+import { isRequestAllowed } from './access.js';
 
 // ---------------------------------------------------------------------------
 // CORS helper
@@ -37,7 +38,7 @@ function json(data, status = 200) {
 // Router
 // ---------------------------------------------------------------------------
 
-async function router(request, env) {
+async function router(request, env, ctx) {
   const url    = new URL(request.url);
   const path   = url.pathname;
   const method = request.method.toUpperCase();
@@ -47,6 +48,10 @@ async function router(request, env) {
     return new Response(null, { status: 204, headers: CORS_HEADERS });
   }
 
+  if (!isRequestAllowed(request, env)) {
+    return json({ error: 'Acceso restringido a Costa Rica' }, 403);
+  }
+
   // Health check
   if (path === '/api/health') {
     return json({ status: 'ok', timestamp: new Date().toISOString() });
@@ -54,12 +59,12 @@ async function router(request, env) {
 
   // Users
   if (path.startsWith('/api/users')) {
-    return handleUsers(request, env, url);
+    return handleUsers(request, env, url, ctx);
   }
 
   // Requests (including match complete)
   if (path.startsWith('/api/requests')) {
-    return handleRequests(request, env, url);
+    return handleRequests(request, env, url, ctx);
   }
 
   // Push — disabled but keep endpoint so the frontend doesn't crash
@@ -81,9 +86,9 @@ export default {
   /**
    * HTTP handler — called for every incoming request.
    */
-  async fetch(request, env, _ctx) {
+  async fetch(request, env, ctx) {
     try {
-      const response = await router(request, env);
+      const response = await router(request, env, ctx);
       return withCors(response);
     } catch (err) {
       console.error('[Worker] Unhandled error:', err.message, err.stack);

@@ -53,9 +53,9 @@ async function createRequest(request, DB) {
 
   console.log(`[Requests] Nueva solicitud #${newRequest.id} de usuario ${user_uuid}`);
 
-  // Run matcher in the background (non-blocking via waitUntil in production,
-  // direct call here since we're already async and D1 is fast)
-  runMatcher(DB).catch(console.error);
+  // Workers cancel pending promises once the response is sent unless we
+  // await or register with waitUntil — fire-and-forget silently never ran.
+  await runMatcher(DB);
 
   return json({ request: newRequest }, 201);
 }
@@ -140,7 +140,7 @@ async function completeMatch(matchId, DB) {
 // Router
 // ---------------------------------------------------------------------------
 
-export async function handleRequests(request, env, url) {
+export async function handleRequests(request, env, url, _ctx) {
   const DB     = env.DB;
   const method = request.method.toUpperCase();
   const parts  = url.pathname.split('/').filter(Boolean);

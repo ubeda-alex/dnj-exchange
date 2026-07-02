@@ -7,7 +7,7 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "dnj-exchange"
-database_id = "f601cc47-7061-44b8-97b6-550154f60478"   # wrangler d1 create dnj-exchange will replace this
+database_id = "ffaf864a-c4e9-4ade-b057-2e50766860b6"   # wrangler d1 create dnj-exchange will replace this
 
 # Cron trigger — matchmaking every minute (minimum interval in Workers)
 [triggers]
@@ -16,3 +16,4 @@ crons = ["* * * * *"]
 # Variables de entorno (secretos se agregan con: wrangler secret put NOMBRE)
 [vars]
 ENVIRONMENT = "production"
+ALLOWED_COUNTRIES = "CR"

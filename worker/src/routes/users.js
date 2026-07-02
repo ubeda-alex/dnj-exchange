@@ -6,6 +6,7 @@
  */
 
 import { query, queryOne, run, serializeArray, parseArray } from '../db.js';
+import { runMatcher } from '../services/matcher.js';
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -52,7 +53,7 @@ async function createUser(request, DB) {
 // GET /api/users/:uuid
 // ---------------------------------------------------------------------------
 
-async function getUser(uuid, DB) {
+async function getUser(uuid, DB, ctx) {
   // 1. Get user
   const { rows: userRows } = await queryOne(DB, 'SELECT * FROM users WHERE uuid = ?', [uuid]);
   if (!userRows.length) return json({ error: 'Usuario no encontrado' }, 404);
@@ -175,6 +176,11 @@ async function getUser(uuid, DB) {
     };
   });
 
+  // Backfill matches for existing searching requests (dashboard polls every 5s).
+  if (ctx?.waitUntil) {
+    ctx.waitUntil(runMatcher(DB).catch(err => console.error('[Users] Matcher error:', err.message)));
+  }
+
   return json({ user, requests, all_searching });
 }
 
@@ -182,14 +188,14 @@ async function getUser(uuid, DB) {
 // Router
 // ---------------------------------------------------------------------------
 
-export async function handleUsers(request, env, url) {
+export async function handleUsers(request, env, url, ctx) {
   const DB     = env.DB;
   const method = request.method.toUpperCase();
   const parts  = url.pathname.split('/').filter(Boolean); // ['api', 'users', uuid?]
   const uuid   = parts[2];
 
   if (method === 'POST' && !uuid)  return createUser(request, DB);
-  if (method === 'GET'  && uuid)   return getUser(uuid, DB);
+  if (method === 'GET'  && uuid)   return getUser(uuid, DB, ctx);
 
   return new Response(JSON.stringify({ error: 'Not found' }), { status: 404 });
 }

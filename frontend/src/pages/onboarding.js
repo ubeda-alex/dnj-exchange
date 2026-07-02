@@ -19,8 +19,8 @@ export async function renderOnboarding(container) {
       
       <div class="content">
         <div class="card onboarding-card">
-          <h2 class="card-title">Intercambio Limón</h2>
-          <p class="card-subtitle" style="margin-bottom: 24px; color: var(--text-muted)">Conecta con otros jóvenes de la Diócesis de CQ para intercambiar tus zonas de entrada.</p>
+          <h2 class="card-title">Intercambio de Entradas para Hakuna Group Music</h2>
+          <p class="card-subtitle" style="margin-bottom: 24px; color: var(--text-muted)">Conecta con otros jóvenes de todo el país para intercambiar tus zonas de entrada.</p>
           
           <form id="onboarding-form">
             <div class="form-group">

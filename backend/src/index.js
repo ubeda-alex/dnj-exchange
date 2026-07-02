@@ -22,6 +22,18 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  const allowedCountries = (process.env.ALLOWED_COUNTRIES || 'CR').split(',').map((value) => value.trim().toUpperCase()).filter(Boolean);
+  const countryCode = (req.headers['cf-ipcountry'] || req.headers['x-country-code'] || '').toString().toUpperCase();
+  const isLocalhost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(req.hostname);
+
+  if (!isLocalhost && allowedCountries.length > 0 && countryCode && !allowedCountries.includes(countryCode)) {
+    return res.status(403).json({ error: 'Acceso restringido a Costa Rica' });
+  }
+
+  next();
+});
+
 // ---------------------------------------------------------------------------
 // Health check
 // ---------------------------------------------------------------------------
