@@ -4,7 +4,7 @@ import { getOrCreateUUID, setSession } from '../auth.js';
 import { navigate, showToast } from '../main.js';
 import { requestNotificationPermission, subscribeToPush } from '../push.js';
 
-const SUPPORT_WHATSAPP_NUMBER = '50612345678'; // Reemplaza con tu número real
+const SUPPORT_WHATSAPP_NUMBER = '50671463656'; // Reemplaza con tu número real
 const SUPPORT_WHATSAPP_MESSAGE = 'Hola, encontré un problema en DNJ Exchange y necesito ayuda.';
 
 export async function renderOnboarding(container) {
