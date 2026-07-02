@@ -1425,6 +1425,13 @@ body::before {
     background: #1f2937 !important;
     color: var(--text) !important;
   }
+  .zone-chip.selected {
+    background: var(--dnj-green) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(65, 163, 61, 0.4) !important;
+    transform: scale(1.1) !important;
+    z-index: 2 !important;
+  }
   .zone-chip.disabled {
     background: #0f172a !important;
     color: var(--text-dim) !important;
