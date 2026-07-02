@@ -3,7 +3,7 @@ import { api } from '../api.js';
 import { getSession, setSession } from '../auth.js';
 import { navigate, showToast } from '../main.js';
 
-const SUPPORT_WHATSAPP_NUMBER = '50612345678'; // Reemplaza con tu número real
+const SUPPORT_WHATSAPP_NUMBER = '50671463656'; // Reemplaza con tu número real
 const SUPPORT_WHATSAPP_MESSAGE = 'Hola, encontré un problema en DNJ Exchange y necesito ayuda.';
 
 let refreshInterval;
