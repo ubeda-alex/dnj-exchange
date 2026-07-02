@@ -231,6 +231,19 @@ body::before {
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
 }
 
+.contact-bug-btn {
+  padding: 0 10px;
+  min-width: auto;
+  height: 34px;
+  font-size: 13px;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+.header-actions .contact-bug-btn {
+  padding: 0 10px;
+}
+
 .btn-icon {
   width: 36px;
   height: 36px;
